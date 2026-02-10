@@ -5,7 +5,7 @@ import { chatService } from '../services/api';
 const Chatbot = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [messages, setMessages] = useState([
-        { role: 'assistant', content: 'Hello! I am Reality-OS AI. How can I help you with your property search today?' }
+        { role: 'assistant', content: 'Hello! I am AI-AUTO AI. How can I help you with your property search today?' }
     ]);
     const [input, setInput] = useState('');
     const [isTyping, setIsTyping] = useState(false);
@@ -34,7 +34,7 @@ const Chatbot = () => {
                     role: m.role === 'assistant' ? 'model' : 'user',
                     content: m.content
                 })),
-                systemInstruction: "You are Reality-OS AI, a real estate sales assistant for builders. Help users with property details, inventory, and site visits. Be professional and helpful."
+                systemInstruction: "You are AI-AUTO AI, a real estate sales assistant for builders. Help users with property details, inventory, and site visits. Be professional and helpful."
             });
 
             setMessages(prev => [...prev, { role: 'assistant', content: response.reply }]);
@@ -89,7 +89,7 @@ const Chatbot = () => {
                                 <Robot size={24} weight="bold" />
                             </div>
                             <div>
-                                <div style={{ fontSize: '1rem', fontWeight: 700 }}>Reality-OS AI</div>
+                                <div style={{ fontSize: '1rem', fontWeight: 700 }}>AI-AUTO AI</div>
                                 <div style={{ fontSize: '0.7rem', opacity: 0.8, display: 'flex', alignItems: 'center', gap: '4px' }}>
                                     <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#4CAF50' }}></div>
                                     Online Assistant

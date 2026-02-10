@@ -9,13 +9,14 @@ import Chatbot from './components/Chatbot';
 import Login from './pages/Login';
 import Settings from './pages/Settings';
 import { authService } from './services/api';
+import socketService from './services/socket';
 import './App.css';
 
 function App() {
   const [currentPage, setCurrentPage] = useState('dashboard');
   const [isLoaded, setIsLoaded] = useState(false);
   const [user, setUser] = useState(authService.getCurrentUser());
-  const [theme, setTheme] = useState(localStorage.getItem('reality_theme') || 'glass');
+  const [theme, setTheme] = useState(localStorage.getItem('aiauto_theme') || 'glass');
 
   useEffect(() => {
     // Simple entrance delay for glassmorphic effect
@@ -23,8 +24,16 @@ function App() {
   }, []);
 
   useEffect(() => {
+    if (user) {
+      socketService.connect();
+    } else {
+      socketService.disconnect();
+    }
+  }, [user]);
+
+  useEffect(() => {
     document.body.className = `${theme}-mode`;
-    localStorage.setItem('reality_theme', theme);
+    localStorage.setItem('aiauto_theme', theme);
   }, [theme]);
 
   const handleLogout = () => {
@@ -41,7 +50,7 @@ function App() {
       case 'projects': return <Projects />;
       case 'leads': return <LeadsAnalytics />;
       case 'visits': return <SiteVisits />;
-      case 'settings': return <Settings theme={theme} setTheme={setTheme} onLogout={handleLogout} />;
+      case 'settings': return <Settings theme={theme} setTheme={setTheme} />;
       default: return <Dashboard />;
     }
   };

@@ -11,7 +11,7 @@ const api = axios.create({
 
 // Add Interceptor to attach token
 api.interceptors.request.use((config) => {
-    const token = localStorage.getItem('reality_token');
+    const token = localStorage.getItem('aiauto_token');
     if (token) {
         config.headers.Authorization = `Bearer ${token}`;
     }
@@ -22,17 +22,17 @@ export const authService = {
     login: async (credentials) => {
         const response = await api.post('/auth/login', credentials);
         if (response.data.token) {
-            localStorage.setItem('reality_token', response.data.token);
-            localStorage.setItem('reality_user', JSON.stringify(response.data));
+            localStorage.setItem('aiauto_token', response.data.token);
+            localStorage.setItem('aiauto_user', JSON.stringify(response.data));
         }
         return response.data;
     },
     logout: () => {
-        localStorage.removeItem('reality_token');
-        localStorage.removeItem('reality_user');
+        localStorage.removeItem('aiauto_token');
+        localStorage.removeItem('aiauto_user');
     },
     getCurrentUser: () => {
-        const user = localStorage.getItem('reality_user');
+        const user = localStorage.getItem('aiauto_user');
         return user ? JSON.parse(user) : null;
     }
 };

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { UserPlus, Lightning, Calendar, CurrencyDollar, Plus, Robot } from '@phosphor-icons/react';
 import LeadStatusChart from '../components/LeadStatusChart';
 import { dashboardService, leadService } from '../services/api';
+import socketService from '../services/socket';
 
 const MetricCard = ({ icon: Icon, title, value, detail, detailColor, action }) => {
     const [isHovered, setIsHovered] = React.useState(false);
@@ -19,20 +20,15 @@ const MetricCard = ({ icon: Icon, title, value, detail, detailColor, action }) =
                 </div>
                 {action && (
                     <div style={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                        gap: '4px',
                         cursor: 'pointer',
-                        padding: '6px 10px',
+                        padding: '8px 14px',
                         borderRadius: 'var(--radius-md)',
                         background: 'var(--pivot-blue-soft)',
                         transition: 'all 0.3s ease',
                         color: 'var(--pivot-blue)',
                         boxShadow: '0 2px 8px rgba(0,0,0,0.05)'
                     }} className="metric-action-btn">
-                        <Plus size={20} weight="bold" />
-                        <span style={{ fontSize: '0.6rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.5px' }}>{action.label}</span>
+                        <span style={{ fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.5px' }}>{action.label}</span>
                     </div>
                 )}
             </div>
@@ -68,6 +64,16 @@ const Dashboard = ({ setCurrentPage }) => {
         };
 
         fetchDashboardData();
+
+        // Real-time listener
+        socketService.on('dashboard-update', (newStats) => {
+            console.log('[REAL-TIME] Dashboard update received');
+            setStats(newStats);
+        });
+
+        return () => {
+            socketService.off('dashboard-update');
+        };
     }, []);
 
     const activeStatus = hoveredStatus || selectedStatus;
@@ -108,7 +114,6 @@ const Dashboard = ({ setCurrentPage }) => {
                 value={stats?.activeProjects || "..."}
                 detail="+2 this month"
                 detailColor="#4CAF50"
-                action={{ label: 'Add Projects' }}
             />
             <MetricCard icon={Calendar} title="Site Visits" value={stats?.siteVisits || "..."} detail="12 scheduled today" detailColor="var(--pivot-blue)" />
             <MetricCard icon={CurrencyDollar} title="Projected Revenue" value={stats?.projectedRevenue || "..."} detail="15% growth" detailColor="#4CAF50" />
@@ -165,11 +170,11 @@ const Dashboard = ({ setCurrentPage }) => {
                                 </h3>
                                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginTop: '1rem' }}>
                                     <div style={{ background: 'white', padding: '1rem', borderRadius: '12px', border: '1px solid var(--glass-border)' }}>
-                                        <div style={{ fontSize: '0.75rem', color: 'var(--charcoal)', fontWeight: 600, textTransform: 'uppercase', marginBottom: '5px' }}>Top Projects</div>
-                                        <div style={{ fontSize: '0.9rem', fontWeight: 500 }}>{analyticsData[activeStatus].projects.join(', ')}</div>
+                                        <div style={{ fontSize: '0.75rem', color: '#6b7280', fontWeight: 600, textTransform: 'uppercase', marginBottom: '5px' }}>Top Projects</div>
+                                        <div style={{ fontSize: '0.9rem', fontWeight: 500, color: '#1f2937' }}>{analyticsData[activeStatus].projects.join(', ')}</div>
                                     </div>
                                     <div style={{ background: 'white', padding: '1rem', borderRadius: '12px', border: '1px solid var(--glass-border)' }}>
-                                        <div style={{ fontSize: '0.75rem', color: 'var(--charcoal)', fontWeight: 600, textTransform: 'uppercase', marginBottom: '5px' }}>Conversion Rate</div>
+                                        <div style={{ fontSize: '0.75rem', color: '#6b7280', fontWeight: 600, textTransform: 'uppercase', marginBottom: '5px' }}>Conversion Rate</div>
                                         <div style={{ fontSize: '1.2rem', fontWeight: 700, color: analyticsData[activeStatus].color }}>{analyticsData[activeStatus].conversion}</div>
                                     </div>
                                 </div>

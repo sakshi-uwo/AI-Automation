@@ -83,7 +83,7 @@ const Login = ({ onLogin }) => {
                     }}>
                         <Buildings size={32} weight="bold" />
                     </div>
-                    <h1 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--soft-black)' }}>Reality-OS</h1>
+                    <h1 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--soft-black)' }}>AI-AUTO</h1>
                     <p style={{ color: 'var(--charcoal)', fontSize: '0.9rem', opacity: 0.7 }}>Builder Dashboard Login</p>
                 </div>
 
@@ -109,7 +109,7 @@ const Login = ({ onLogin }) => {
                             <User size={20} color="var(--charcoal)" opacity={0.5} />
                             <input
                                 type="email"
-                                placeholder="builder@reality-os.com"
+                                placeholder="builder@ai-auto.com"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 required

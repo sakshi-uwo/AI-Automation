@@ -1,8 +1,39 @@
 import React from 'react';
 import { MagnifyingGlass, Bell, ChatCircleDots } from '@phosphor-icons/react';
+import socketService from '../services/socket';
 
 const Header = ({ user, onLogout }) => {
     const [showNotifications, setShowNotifications] = React.useState(false);
+    const [notifications, setNotifications] = React.useState([
+        { id: 1, title: 'New High-Score Lead', time: '2 mins ago', type: 'Hot', detail: 'Johnathan Smith just inquired about Skyline Towers.' },
+        { id: 2, title: 'Site Visit Confirmed', time: '1 hour ago', type: 'Warm', detail: 'Elena Rodriguez scheduled a visit for Saturday.' },
+        { id: 3, title: 'Inventory Alert', time: '3 hours ago', type: 'Cold', detail: 'Only 12 units remaining in Phase 1 of Green Valley.' },
+    ]);
+    const [unread, setUnread] = React.useState(true);
+
+    React.useEffect(() => {
+        socketService.on('notification-push', (notif) => {
+            console.log('[REAL-TIME] Notification received:', notif.title);
+            const newNotif = {
+                id: Date.now(),
+                title: notif.title,
+                time: 'Just now',
+                type: notif.type || 'Hot',
+                detail: notif.message
+            };
+            setNotifications(prev => [newNotif, ...prev]);
+            setUnread(true);
+        });
+
+        return () => {
+            socketService.off('notification-push');
+        };
+    }, []);
+
+    const handleToggleNotifications = () => {
+        setShowNotifications(!showNotifications);
+        if (!showNotifications) setUnread(false);
+    };
 
     const headerStyle = {
         height: '70px',
@@ -18,12 +49,6 @@ const Header = ({ user, onLogout }) => {
         top: 0,
         zIndex: 90,
     };
-
-    const notifications = [
-        { id: 1, title: 'New High-Score Lead', time: '2 mins ago', type: 'Hot', detail: 'Johnathan Smith just inquired about Skyline Towers.' },
-        { id: 2, title: 'Site Visit Confirmed', time: '1 hour ago', type: 'Warm', detail: 'Elena Rodriguez scheduled a visit for Saturday.' },
-        { id: 3, title: 'Inventory Alert', time: '3 hours ago', type: 'Cold', detail: 'Only 12 units remaining in Phase 1 of Green Valley.' },
-    ];
 
     return (
         <header style={headerStyle}>
@@ -49,11 +74,13 @@ const Header = ({ user, onLogout }) => {
                 <div style={{ position: 'relative' }}>
                     <button
                         className="icon-btn"
-                        onClick={() => setShowNotifications(!showNotifications)}
+                        onClick={handleToggleNotifications}
                         style={{ background: 'none', border: 'none', color: 'var(--charcoal)', cursor: 'pointer', position: 'relative', outline: 'none' }}
                     >
                         <Bell size={24} color={showNotifications ? 'var(--pivot-blue)' : 'var(--charcoal)'} />
-                        <span style={{ width: '8px', height: '8px', background: '#ff4d4d', borderRadius: '50%', position: 'absolute', top: '-2px', right: '-2px', border: '2px solid var(--white)' }}></span>
+                        {unread && (
+                            <span style={{ width: '8px', height: '8px', background: '#ff4d4d', borderRadius: '50%', position: 'absolute', top: '-2px', right: '-2px', border: '2px solid var(--white)' }}></span>
+                        )}
                     </button>
 
                     {showNotifications && (
@@ -68,7 +95,7 @@ const Header = ({ user, onLogout }) => {
                                 <h4 style={{ margin: 0, fontSize: '1rem', fontWeight: 800 }}>Recent Alerts</h4>
                                 <span style={{ fontSize: '0.75rem', color: 'var(--pivot-blue)', fontWeight: 700, cursor: 'pointer' }}>Mark all as read</span>
                             </div>
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem', maxHeight: '400px', overflowY: 'auto' }}>
                                 {notifications.map(n => (
                                     <div key={n.id} style={{ display: 'flex', flexDirection: 'column', gap: '4px', padding: '8px', borderRadius: '8px', cursor: 'pointer' }}
                                         onMouseEnter={(e) => e.currentTarget.style.background = 'var(--pivot-blue-soft)'}

@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Buildings, Calendar, ChartPieSlice, Info, ArrowRight, Cube } from '@phosphor-icons/react';
 import { leadService } from '../services/api';
+import socketService from '../services/socket';
 
 const LeadsAnalytics = () => {
     const [hoveredType, setHoveredType] = useState(null);
     const [selectedType, setSelectedType] = useState(null);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [filterStatus, setFilterStatus] = useState('All');
     const [leads, setLeads] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -20,6 +23,16 @@ const LeadsAnalytics = () => {
             }
         };
         fetchLeads();
+
+        // Real-time listener
+        socketService.on('lead-added', (newLead) => {
+            console.log('[REAL-TIME] New lead added:', newLead.name);
+            setLeads(prevLeads => [newLead, ...prevLeads]);
+        });
+
+        return () => {
+            socketService.off('lead-added');
+        };
     }, []);
 
     const handleHover = (type) => {
@@ -58,10 +71,16 @@ const LeadsAnalytics = () => {
         }
     };
 
-    const chartData = [
+    // Use demo data if no leads exist so users can see the chart functionality
+    const hasLeads = leads.length > 0;
+    const chartData = hasLeads ? [
         { type: 'Hot', value: getCount('Hot'), color: '#ff6b6b' },
         { type: 'Warm', value: getCount('Warm'), color: '#ff9f4d' },
         { type: 'Cold', value: getCount('Cold'), color: '#4d9fff' },
+    ] : [
+        { type: 'Hot', value: 3, color: '#ff6b6b' },
+        { type: 'Warm', value: 5, color: '#ff9f4d' },
+        { type: 'Cold', value: 2, color: '#4d9fff' },
     ];
 
     const total = chartData.reduce((acc, curr) => acc + curr.value, 0);
@@ -100,11 +119,26 @@ const LeadsAnalytics = () => {
                         overflow: 'hidden'
                     }}>
                         <div style={{ flexShrink: 0, textAlign: 'center', transition: 'var(--transition)', zIndex: 1, width: '100%' }}>
-                            <h2 style={{ fontSize: '1.2rem', fontWeight: 600, marginBottom: '2rem' }}>Lead Status Distribution</h2>
+                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px', marginBottom: '2rem' }}>
+                                <h2 style={{ fontSize: '1.2rem', fontWeight: 600, margin: 0 }}>Lead Status Distribution</h2>
+                                {!hasLeads && (
+                                    <span style={{
+                                        fontSize: '0.7rem',
+                                        fontWeight: 700,
+                                        color: 'var(--pivot-blue)',
+                                        background: 'var(--pivot-blue-soft)',
+                                        padding: '4px 10px',
+                                        borderRadius: '12px',
+                                        border: '1px solid var(--pivot-blue-light)'
+                                    }}>
+                                        DEMO DATA
+                                    </span>
+                                )}
+                            </div>
                             <div style={{ position: 'relative', width: size, height: size, margin: '0 auto' }}>
                                 <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
                                     {chartData.map((item, index) => {
-                                        const percentage = (item.value / total) * 100;
+                                        const percentage = total === 0 ? 0 : (item.value / total) * 100;
                                         const dashoffset = circumference - (percentage / 100) * circumference;
                                         const rotation = accumulatedAngle;
                                         accumulatedAngle += (percentage / 100) * 360;

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { User, Bell, Palette, ShieldCheck, Database, SlidersHorizontal, SignOut } from '@phosphor-icons/react';
+import { User, Bell, Palette, ShieldCheck, Database, SlidersHorizontal } from '@phosphor-icons/react';
 
-const Settings = ({ theme: currentTheme, setTheme, onLogout }) => {
+const Settings = ({ theme: currentTheme, setTheme }) => {
     const [activeTab, setActiveTab] = useState('profile');
 
     const tabs = [
@@ -28,7 +28,7 @@ const Settings = ({ theme: currentTheme, setTheme, onLogout }) => {
                             </div>
                             <div className="input-group">
                                 <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, marginBottom: '6px' }}>Email Address</label>
-                                <input type="email" defaultValue="alex@reality-os.com" style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid var(--glass-border)', background: 'var(--white)', color: 'var(--text-main)' }} />
+                                <input type="email" defaultValue="alex@ai-auto.com" style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid var(--glass-border)', background: 'var(--white)', color: 'var(--text-main)' }} />
                             </div>
                         </div>
                     </div>
@@ -73,7 +73,7 @@ const Settings = ({ theme: currentTheme, setTheme, onLogout }) => {
         <div style={{ padding: '2rem', height: '100%', display: 'flex', flexDirection: 'column' }}>
             <div style={{ marginBottom: '2rem' }}>
                 <h1 style={{ fontSize: '1.8rem', fontWeight: 700 }}>System Settings</h1>
-                <p style={{ color: 'var(--charcoal)', fontSize: '0.9rem', marginTop: '5px' }}>Configure your Reality-OS environment and account security.</p>
+                <p style={{ color: 'var(--charcoal)', fontSize: '0.9rem', marginTop: '5px' }}>Configure your AI-AUTO environment and account security.</p>
             </div>
 
             <div className="card" style={{ flex: 1, display: 'flex', padding: 0, overflow: 'hidden' }}>
@@ -105,21 +105,9 @@ const Settings = ({ theme: currentTheme, setTheme, onLogout }) => {
                         {renderTabContent()}
                     </div>
 
-                    <div style={{ marginTop: '2rem', paddingTop: '1.5rem', borderTop: '1px solid var(--glass-border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <div
-                            onClick={onLogout}
-                            style={{ color: '#ff4d4d', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.9rem' }}
-                            onMouseEnter={(e) => e.currentTarget.style.opacity = '0.7'}
-                            onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
-                        >
-                            <SignOut size={20} weight="bold" />
-                            Sign Out of OS
-                        </div>
-
-                        <div style={{ display: 'flex', gap: '1rem' }}>
-                            <button style={{ padding: '10px 20px', borderRadius: '8px', border: '1px solid var(--glass-border)', background: 'var(--white)', color: 'var(--text-main)', fontWeight: 600, cursor: 'pointer' }}>Cancel</button>
-                            <button style={{ padding: '10px 25px', borderRadius: '8px', border: 'none', background: 'var(--pivot-blue)', color: 'white', fontWeight: 700, cursor: 'pointer' }}>Save Changes</button>
-                        </div>
+                    <div style={{ marginTop: '3rem', paddingTop: '1.5rem', borderTop: '1px solid var(--glass-border)', display: 'flex', justifyContent: 'flex-end', gap: '1rem' }}>
+                        <button style={{ padding: '10px 20px', borderRadius: '8px', border: '1px solid var(--glass-border)', background: 'var(--white)', color: 'var(--text-main)', fontWeight: 600, cursor: 'pointer' }}>Cancel</button>
+                        <button style={{ padding: '10px 25px', borderRadius: '8px', border: 'none', background: 'var(--pivot-blue)', color: 'white', fontWeight: 700, cursor: 'pointer' }}>Save Changes</button>
                     </div>
                 </div>
             </div>

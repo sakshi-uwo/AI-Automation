@@ -41,7 +41,7 @@ const Sidebar = ({ currentPage, setCurrentPage, onLogout }) => {
                 <div style={{ width: '32px', height: '32px', background: 'var(--pivot-blue-light)', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 0 15px var(--pivot-blue-light)' }}>
                     <Cube size={20} weight="bold" color="white" />
                 </div>
-                <span>Reality-OS</span>
+                <span>AI-AUTO</span>
             </div>
 
             <nav style={{ flex: 1 }}>
