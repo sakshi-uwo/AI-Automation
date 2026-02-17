@@ -22,6 +22,7 @@ import supportRoutes from "./routes/supportRoutes.js";
 import paymentRoutes from "./routes/paymentRoutes.js";
 import milestoneRoutes from "./routes/milestoneRoutes.js";
 import siteVisitRoutes from "./routes/siteVisitRoutes.js";
+import authRoutes from "./routes/authRoutes.js";
 
 const app = express();
 const server = http.createServer(app);
@@ -85,6 +86,7 @@ app.use("/api/support", supportRoutes);
 app.use("/api/payments", paymentRoutes);
 app.use("/api/milestones", milestoneRoutes);
 app.use("/api/site-visits", siteVisitRoutes);
+app.use("/api/auth", authRoutes);
 
 /* -------------------- HEALTH CHECK -------------------- */
 app.get("/", (req, res) => {

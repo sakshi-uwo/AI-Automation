@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { User, Envelope, Lock, ArrowRight, Warning, CheckCircle } from '@phosphor-icons/react';
+import { User, Envelope, Lock, ArrowRight, Warning, CheckCircle, Briefcase, Eye, EyeSlash } from '@phosphor-icons/react';
 import { authService } from '../services/api';
 
 const Signup = () => {
@@ -8,9 +8,11 @@ const Signup = () => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState(''); // Backend doesn't seem to use password yet but good for UI
+    const [role, setRole] = useState('Client');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [success, setSuccess] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -18,7 +20,7 @@ const Signup = () => {
         setError('');
 
         try {
-            await authService.signup({ name, email });
+            await authService.signup({ name, email, role });
             setSuccess(true);
             setTimeout(() => {
                 navigate('/login');
@@ -129,6 +131,28 @@ const Signup = () => {
                         </div>
 
                         <div className="input-group" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                            <label style={{ fontSize: '0.85rem', fontWeight: 600, color: '#2c3e50' }}>Role</label>
+                            <div className="input-field" style={{
+                                display: 'flex', alignItems: 'center', gap: '10px', padding: '12px 16px',
+                                background: 'white', border: '1px solid #e2e8f0', borderRadius: '10px', transition: 'all 0.2s'
+                            }}>
+                                <Briefcase size={20} color="#2c3e50" opacity={0.5} />
+                                <select
+                                    value={role}
+                                    onChange={(e) => setRole(e.target.value)}
+                                    required
+                                    style={{ border: 'none', outline: 'none', width: '100%', fontSize: '0.95rem', background: 'transparent', cursor: 'pointer' }}
+                                >
+                                    <option value="Client">Client/Buyer</option>
+                                    <option value="Builder">Builder</option>
+                                    <option value="Civil Engineer">Civil Engineer</option>
+                                    <option value="Site Manager">Site Manager</option>
+                                    <option value="Admin">Admin</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div className="input-group" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                             <label style={{ fontSize: '0.85rem', fontWeight: 600, color: '#2c3e50' }}>Password</label>
                             <div className="input-field" style={{
                                 display: 'flex', alignItems: 'center', gap: '10px', padding: '12px 16px',
@@ -136,13 +160,32 @@ const Signup = () => {
                             }}>
                                 <Lock size={20} color="#2c3e50" opacity={0.5} />
                                 <input
-                                    type="password"
+                                    type={showPassword ? "text" : "password"}
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
                                     placeholder="••••••••"
                                     required
                                     style={{ border: 'none', outline: 'none', width: '100%', fontSize: '0.95rem' }}
                                 />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    style={{
+                                        background: 'none',
+                                        border: 'none',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        cursor: 'pointer',
+                                        padding: '4px',
+                                        color: '#2c3e50',
+                                        opacity: 0.5,
+                                        transition: 'opacity 0.2s'
+                                    }}
+                                    onMouseEnter={(e) => e.currentTarget.style.opacity = '1'}
+                                    onMouseLeave={(e) => e.currentTarget.style.opacity = '0.5'}
+                                >
+                                    {showPassword ? <EyeSlash size={20} /> : <Eye size={20} />}
+                                </button>
                             </div>
                         </div>
 

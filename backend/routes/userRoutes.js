@@ -7,10 +7,16 @@ const router = express.Router();
 // @desc    Create a new user (signup)
 router.post('/signup', async (req, res) => {
     try {
-        const { name, email } = req.body;
+        const { name, email, role } = req.body;
 
         if (!name || !email) {
             return res.status(400).json({ message: 'Please provide name and email' });
+        }
+
+        // Validate role if provided
+        const validRoles = ['Admin', 'Builder', 'Civil Engineer', 'Site Manager', 'Client'];
+        if (role && !validRoles.includes(role)) {
+            return res.status(400).json({ message: 'Invalid role selected' });
         }
 
         // Check if user already exists
@@ -22,12 +28,12 @@ router.post('/signup', async (req, res) => {
         const newUser = new User({
             name,
             email,
-            role: 'Client',
+            role: role || 'Client',
             status: 'Active'
         });
 
         const savedUser = await newUser.save();
-        console.log('✅ New user signed up:', savedUser.name);
+        console.log('✅ New user signed up:', savedUser.name, 'as', savedUser.role);
 
         res.status(201).json(savedUser);
     } catch (err) {

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { User, Lock, ArrowRight, Buildings, Warning } from '@phosphor-icons/react';
+import { User, Lock, ArrowRight, Buildings, Warning, Eye, EyeSlash } from '@phosphor-icons/react';
 import { authService } from '../services/api';
 import { ROLE_CREDENTIALS } from '../config/authConfig';
 
@@ -12,13 +12,14 @@ const Login = () => {
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
 
     const roles = [
-        { label: 'Admin', role: 'admin', color: 'var(--pivot-blue)' },
-        { label: 'Builder', role: 'builder', color: '#0047AB' },
-        { label: 'Civil Engineer', role: 'civil_engineer', color: '#2E5BFF' },
-        { label: 'Site Manager', role: 'project_site', color: '#4CAF50' },
-        { label: 'Client/Buyer', role: 'client', color: '#ff9f4d' },
+        { label: 'Admin', role: 'Admin', color: 'var(--pivot-blue)' },
+        { label: 'Builder', role: 'Builder', color: '#0047AB' },
+        { label: 'Civil Engineer', role: 'Civil Engineer', color: '#2E5BFF' },
+        { label: 'Site Manager', role: 'Site Manager', color: '#4CAF50' },
+        { label: 'Client/Buyer', role: 'Client', color: '#ff9f4d' },
     ];
 
     const handleSubmit = async (e) => {
@@ -151,13 +152,32 @@ const Login = () => {
                             }}>
                                 <Lock size={20} color="#2c3e50" opacity={0.5} />
                                 <input
-                                    type="password"
+                                    type={showPassword ? "text" : "password"}
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
                                     placeholder="••••••••"
                                     required
                                     style={{ border: 'none', outline: 'none', width: '100%', fontSize: '0.95rem' }}
                                 />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    style={{
+                                        background: 'none',
+                                        border: 'none',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        cursor: 'pointer',
+                                        padding: '4px',
+                                        color: '#2c3e50',
+                                        opacity: 0.5,
+                                        transition: 'opacity 0.2s'
+                                    }}
+                                    onMouseEnter={(e) => e.currentTarget.style.opacity = '1'}
+                                    onMouseLeave={(e) => e.currentTarget.style.opacity = '0.5'}
+                                >
+                                    {showPassword ? <EyeSlash size={20} /> : <Eye size={20} />}
+                                </button>
                             </div>
                         </div>
 
