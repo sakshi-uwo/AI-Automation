@@ -27,7 +27,6 @@ import siteVisitRoutes from "./routes/siteVisitRoutes.js";
 import redirectRoutes from "./routes/redirectRoutes.js";
 import siteOperationsRoutes from './routes/siteOperationsRoutes.js';
 
-
 const app = express();
 const server = http.createServer(app);
 
@@ -94,7 +93,6 @@ app.use("/api/milestones", milestoneRoutes);
 app.use("/api/site-visits", siteVisitRoutes);
 app.use("/api/redirect", redirectRoutes);
 app.use("/api/site-ops", siteOperationsRoutes);
-
 
 /* -------------------- HEALTH CHECK -------------------- */
 app.get("/", (req, res) => {
